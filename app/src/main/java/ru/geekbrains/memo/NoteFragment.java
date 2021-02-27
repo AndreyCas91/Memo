@@ -1,0 +1,51 @@
+package ru.geekbrains.memo;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+public class NoteFragment extends Fragment {
+
+    public static final String ARG_INDEX = "index";
+
+    MemoFragment MF = new MemoFragment();
+
+    private EditText editText;
+
+    public static NoteFragment newIstance(int index) {
+        NoteFragment noteFragment = new NoteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_INDEX, index);
+        noteFragment.setArguments(bundle);
+        return noteFragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_note, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        editText = view.findViewById(R.id.edit_text);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getArguments() != null) {
+            int index = getArguments().getInt(ARG_INDEX);
+            String noteMesseg = MF.SNote.get(index).getDesk();
+            editText.setText(noteMesseg);
+            editText.setTextSize(20f);
+        }
+    }
+}
