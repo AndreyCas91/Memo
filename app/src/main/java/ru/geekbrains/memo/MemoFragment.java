@@ -1,6 +1,5 @@
 package ru.geekbrains.memo;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -57,33 +56,35 @@ public class MemoFragment extends Fragment {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chekOrintation(index);
+                    chekOrintation(SNote.get(index).getDesk());
                 }
             });
             linearLayout.addView(tv);
-
         }
     }
 
-    private void chekOrintation(int index) {
+    private void chekOrintation(String messeg) {
         if (orientation) {
-            openNoteFragment(index);
+            openNoteFragment(messeg);
         } else {
-            startActivityNote(index);
+            startNoteFragment(messeg);
         }
     }
 
-    private void openNoteFragment(int index) {
-        NoteFragment noteFragment = NoteFragment.newIstance(index);
+    private void openNoteFragment(String messeg) {
+        NoteFragment noteFragment = NoteFragment.newIstance(messeg);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_container, noteFragment)
                 .commit();
     }
 
-    private void startActivityNote(int index) {
-        Intent intent = new Intent(getActivity(), ActivityNote.class);
-        intent.putExtra(NoteFragment.ARG_INDEX, index);
-        startActivity(intent);
+    private void startNoteFragment(String messeg) {
+        NoteFragment noteFragment = NoteFragment.newIstance(messeg);
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.memo, noteFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

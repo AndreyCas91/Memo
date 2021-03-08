@@ -14,14 +14,12 @@ public class NoteFragment extends Fragment {
 
     public static final String ARG_INDEX = "index";
 
-    MemoFragment MF = new MemoFragment();
-
     private EditText editText;
 
-    public static NoteFragment newIstance(int index) {
+    public static NoteFragment newIstance(String messeg) {
         NoteFragment noteFragment = new NoteFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_INDEX, index);
+        bundle.putString(ARG_INDEX, messeg);
         noteFragment.setArguments(bundle);
         return noteFragment;
     }
@@ -42,9 +40,8 @@ public class NoteFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getArguments() != null) {
-            int index = getArguments().getInt(ARG_INDEX);
-            String noteMesseg = MF.SNote.get(index).getDesk();
-            editText.setText(noteMesseg);
+            String messeg = getArguments().getString(ARG_INDEX);
+            editText.setText(messeg);
             editText.setTextSize(20f);
         }
     }
