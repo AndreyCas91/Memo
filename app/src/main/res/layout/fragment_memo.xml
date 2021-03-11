@@ -2,9 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/fragment_memo"
+    android:layout_height="wrap_content"
     tools:context=".MemoFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_memo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

@@ -1,21 +1,20 @@
 package ru.geekbrains.memo;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MemoFragment extends Fragment {
+public class MemoFragment extends Fragment implements MemoAdapterCallback {
     public static final ArrayList<SimpleNote> SNote = new ArrayList<>(Arrays.asList(
             new SimpleNote("Встреча (парк)", "В парке .....", "12.03"),
             new SimpleNote("Встреча (кино)", "В кино .......", "17.03"),
@@ -23,7 +22,7 @@ public class MemoFragment extends Fragment {
             new SimpleNote("Встреча (аэропорт)", "В аэропорту .......", "10.04")
     ));
 
-    private boolean orientation;
+    private final MemoAdapter adapter = new MemoAdapter(this);
 
     @Nullable
     @Override
@@ -41,42 +40,13 @@ public class MemoFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        orientation = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        adapter.setItems(SNote);
     }
 
     private void initList(View view) {
-        LinearLayout linearLayout = (LinearLayout) view;
-
-        for (int i = 0; i < SNote.size(); i++) {
-            String str = SNote.get(i).getTitle() + ".     " + SNote.get(i).getData();
-            TextView tv = new TextView(linearLayout.getContext());
-            tv.setText(str);
-            tv.setTextSize(20f);
-            int index = i;
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chekOrintation(SNote.get(index).getDesk());
-                }
-            });
-            linearLayout.addView(tv);
-        }
-    }
-
-    private void chekOrintation(String messeg) {
-        if (orientation) {
-            openNoteFragment(messeg);
-        } else {
-            startNoteFragment(messeg);
-        }
-    }
-
-    private void openNoteFragment(String messeg) {
-        NoteFragment noteFragment = NoteFragment.newIstance(messeg);
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.layout_container, noteFragment)
-                .commit();
+        RecyclerView recyclerView = view.findViewById(R.id.rv_memo);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        recyclerView.setAdapter(adapter);
     }
 
     private void startNoteFragment(String messeg) {
@@ -86,5 +56,10 @@ public class MemoFragment extends Fragment {
                 .replace(R.id.memo, noteFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        startNoteFragment(SNote.get(position).getDesk());
     }
 }
